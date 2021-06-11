@@ -12,6 +12,6 @@ public class MyFirstVerticle extends AbstractVerticle {
                     req.response()
                             .putHeader("content-type", "text/plain")
                             .end("Hello World!");
-                }).listen(8088);
+                }).listen(8089);
     }
 }
