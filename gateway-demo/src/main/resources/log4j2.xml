@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+    <properties>
+        <!-- File base path -->
+        <property name="LOG_HOME">logs/gateway-demo</property>
+    </properties>
+
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5p | %X{requestid} | %X{requestip} | %c{1}.%M:%L | %m %n" />
+        </Console>
+        <RollingFile name="InfoRollingFile" fileName="${LOG_HOME}/application.log" filePattern="${LOG_HOME}/application.%d{yyyy-MM-dd}-%i.log.gz">
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5p | %X{requestid} | %X{requestip} | %-5p | %c{1}.%M:%L | %m %n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="WarnRollingFile" fileName="${LOG_HOME}/application-warn.log" filePattern="${LOG_HOME}/application-warn.%d{yyyy-MM-dd}-%i.log.gz">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5p | %X{requestid} | %X{requestip} | %-5p | %c{1}.%M:%L | %m %n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="ErrorRollingFile" fileName="${LOG_HOME}/application-error.log" filePattern="${LOG_HOME}/application-error.%d{yyyy-MM-dd}-%i.log.gz">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5p | %X{requestid} | %X{requestip} | %-5p | %c{1}.%M:%L | %m %n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+        </RollingFile>
+    </appenders>
+    <loggers>
+        <logger name="com.gotkx" level="DEBUG"/>
+        <root level="DEBUG">
+            <appender-ref ref="Console" />
+            <appender-ref ref="InfoRollingFile" />
+            <appender-ref ref="WarnRollingFile" />
+            <appender-ref ref="ErrorRollingFile" />
+        </root>
+    </loggers>
+</configuration>
