@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <gateway>
 
+    <!--网关id-->
     <id>1001</id>
 
+    <!--外网端口-->
     <recvport>8091</recvport>
 
+    <!--排队机抓取服务端口-->
+    <fetchservport>8890</fetchservport>
 
 </gateway>

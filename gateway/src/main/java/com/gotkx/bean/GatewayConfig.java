@@ -1,5 +1,7 @@
 package com.gotkx.bean;
 
+import com.alipay.sofa.rpc.config.ProviderConfig;
+import com.alipay.sofa.rpc.config.ServerConfig;
 import com.gotkx.bean.handler.ConnHandler;
 import io.vertx.core.Vertx;
 import io.vertx.core.net.NetServer;
@@ -11,16 +13,27 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import thirdpart.checksum.ICheckSum;
 import thirdpart.codec.IBodyCodec;
+import thirdpart.fetchsurv.IFetchService;
 
 import java.io.File;
 
 @Log4j2
 @Getter
 public class GatewayConfig {
-    //网关ID
+    /**
+     * 网关ID
+     */
     private short id;
-    //端口
+
+    /**
+     * 端口
+     */
     private int recvPort;
+
+    /**
+     * 排队机通信端口
+     */
+    private int fetchServPort;
 
     //TODO 柜台列表 数据库连接
 
@@ -42,7 +55,9 @@ public class GatewayConfig {
         //1.端口
         id = Short.parseShort(root.element("id").getText());
         recvPort = Integer.parseInt(root.element("recvport").getText());
-        log.info("GateWay ID:{},Port:{}", id, recvPort);
+        fetchServPort = Integer.parseInt(root.element("fetchservport").getText());
+
+        log.info("GateWay ID : {}, Port : {}, fetchServPort : {}", id, recvPort, fetchServPort);
 
         //TODO 数据库连接 连接柜台列表
     }
@@ -52,6 +67,22 @@ public class GatewayConfig {
         initRecv();
 
         //TODO 2.排队机交互
+        initFetchServ();
+    }
+
+    private void initFetchServ(){
+        ServerConfig rpcConfig = new ServerConfig()
+                .setPort(fetchServPort)
+                .setProtocol("bolt");
+
+        //implement IFetchService
+        ProviderConfig<IFetchService> providerConfig = new ProviderConfig<IFetchService>()
+                .setInterfaceId(IFetchService.class.getName())
+                .setRef(() -> OrderCmdContainer.getInstance().getAll())
+                .setServer(rpcConfig);
+        providerConfig.export();
+
+        log.info("gateway startup fetchServ success at port : {}",fetchServPort);
     }
 
     private void initRecv() {

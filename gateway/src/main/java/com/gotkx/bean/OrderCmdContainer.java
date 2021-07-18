@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+/**
+ * @author HuangKai
+ */
 public class OrderCmdContainer {
 
     private static OrderCmdContainer ourInstance = new OrderCmdContainer();
